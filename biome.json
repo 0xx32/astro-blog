@@ -7,7 +7,15 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["dist/*", "node_modules/*", "public/*", ".astro/*"]
+		"ignore": [
+			"dist/*",
+			"node_modules/*",
+			"public/*",
+			".astro/*",
+			".vscode/*",
+			".git/*",
+			"prisma/*"
+		]
 	},
 	"formatter": {
 		"enabled": true,

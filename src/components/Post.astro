@@ -1,0 +1,88 @@
+---
+import { Image } from "astro:assets";
+import type { UserImageAllRelations } from "@_types/user";
+import { CldImage } from "astro-cloudinary";
+import { getCldImageUrl, getCldVideoUrl } from "astro-cloudinary/helpers";
+import type { User } from "better-auth";
+import HeartLike from "./HeartLike.vue";
+
+interface Props {
+	imgData: UserImageAllRelations;
+	currentUser: User;
+}
+
+const { imgData, currentUser } = Astro.props;
+
+const cldVideoPreview = getCldVideoUrl({
+	src: imgData.url,
+	rawTransformations: "e_preview",
+});
+---
+
+<div class='card bg-base-300 shadow p-8'>
+	<div class='flex items-center gap-2 pb-4'>
+		<Image
+			src={currentUser.image!}
+			alt={''}
+			width={40}
+			height={40}
+			class='rounded-full'
+		/>
+		<a href={`profile/${currentUser.id}`}><p>{currentUser.name}</p></a>
+		<p class='text-sm ml-auto'>
+			{new Date(imgData.createdAt).toLocaleString()}
+		</p>
+	</div>
+
+	<div class='h-full bg-base-200 group flex relative items-center mb-4'>
+		<div aria-hidden class='overlay-preview ' />
+		<a href={`/post/${imgData.id}`} class='link-preiew'>Перейти к посту</a>
+
+		{
+			imgData.format === 'mp4' && (
+				<video class='video-preview h-[38rem] w-full rounded-md' src={cldVideoPreview} muted  />
+			)
+		}
+		{
+			imgData.format !== 'mp4' && (
+				<CldImage
+					src={getCldImageUrl({ src: imgData.url })}
+					alt={imgData.description}
+					class='rounded-md'
+				/>
+			)
+		}
+	</div>
+
+	<div class=''>
+		<HeartLike client:load currentUser={currentUser} imgData={imgData} class:list='ml-auto'  />
+	</div>
+</div>
+
+<script>
+	(function() {
+		const videos = document.querySelectorAll<HTMLVideoElement>('.video-preview')
+
+		videos.forEach((video) => {
+			video.addEventListener('mouseover', () => {
+				video.currentTime = 0
+				video.play()
+			
+			})
+			video.addEventListener('mouseout', () => {
+				video.pause()
+			})
+		})
+	})()
+</script>
+
+
+
+<style>
+.overlay-preview {
+	@apply absolute left-0 top-0 w-full h-full bg-black opacity-0 group-hover:opacity-50 pointer-events-none transition-opacity;
+}
+.link-preiew {
+  @apply absolute top-1/2 left-1/2 pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 transition transform -translate-x-1/2 -translate-y-1/2 z-20 hover:text-white font-bold text-2xl;
+}
+</style>

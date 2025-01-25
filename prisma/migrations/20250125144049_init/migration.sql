@@ -56,6 +56,41 @@ CREATE TABLE "verification" (
     CONSTRAINT "verification_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "user_image" (
+    "id" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "format" TEXT NOT NULL DEFAULT 'jpg',
+    "description" TEXT,
+    "visavility" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "user_id" TEXT NOT NULL,
+
+    CONSTRAINT "user_image_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "image_like" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "image_id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "image_like_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "image_comment" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "image_id" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "image_comment_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
@@ -67,3 +102,18 @@ ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_image" ADD CONSTRAINT "user_image_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "image_like" ADD CONSTRAINT "image_like_image_id_fkey" FOREIGN KEY ("image_id") REFERENCES "user_image"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "image_like" ADD CONSTRAINT "image_like_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "image_comment" ADD CONSTRAINT "image_comment_image_id_fkey" FOREIGN KEY ("image_id") REFERENCES "user_image"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "image_comment" ADD CONSTRAINT "image_comment_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;

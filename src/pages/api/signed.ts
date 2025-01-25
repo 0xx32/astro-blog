@@ -1,20 +1,22 @@
-import type { APIRoute } from "astro";
-import { v2 as cloudinary } from "cloudinary";
+import type { APIRoute } from "astro"
+import { v2 as cloudinary } from "cloudinary"
+
+export const prerender = false
 
 cloudinary.config({
 	cloud_name: import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME,
 	api_key: import.meta.env.PUBLIC_CLOUDINARY_API_KEY,
 	api_secret: import.meta.env.PUBLIC_CLOUDINARY_API_SECRET,
-});
+})
 
 export const POST: APIRoute = async ({ request }) => {
-	const body = await request.json();
-	const { paramsToSign } = body;
+	const body = await request.json()
+	const { paramsToSign } = body
 
 	const signature = cloudinary.utils.api_sign_request(
 		paramsToSign,
-		import.meta.env.PUBLIC_CLOUDINARY_API_SECRET,
-	);
+		import.meta.env.PUBLIC_CLOUDINARY_API_SECRET
+	)
 
-	return Response.json({ signature });
-};
+	return Response.json({ signature })
+}

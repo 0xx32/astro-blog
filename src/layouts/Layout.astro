@@ -1,11 +1,5 @@
 ---
-import Navigation from "../components/Navigation.vue";
-
-import { auth } from "../utils/auth/auth";
-
-const session = await auth.api.getSession({
-	headers: Astro.request.headers,
-});
+import Navigation from "../components/Navigation.vue"
 ---
 
 <!doctype html>
@@ -19,7 +13,7 @@ const session = await auth.api.getSession({
 	</head>
 	<body>
 	<div class='container mx-auto'>
-		<Navigation sesh={session} client:load />
+		<Navigation  client:load />
 		<main><slot /></main>
 	</div>
 	</body>

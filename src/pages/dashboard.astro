@@ -1,17 +1,19 @@
 ---
-import { CldUploadWidget } from "astro-cloudinary";
-import { CloudUpload } from "lucide-vue-next";
+export const prerender = false
 
-import Post from "@components/Post.astro";
-import Layout from "@layouts/Layout.astro";
-import { prisma } from "@utils/db";
+import { CldUploadWidget } from "astro-cloudinary"
+import { CloudUpload } from "lucide-vue-next"
 
-const currentUser = Astro.locals.user;
+import Post from "@components/Post.astro"
+import Layout from "@layouts/Layout.astro"
+import { prisma } from "@utils/db"
+
+const currentUser = Astro.locals.user
 
 const images = await prisma.userImage.findMany({
 	where: { userId: currentUser?.id },
 	include: { likes: true, user: true, comments: true },
-});
+})
 ---
 
 <Layout>
@@ -36,15 +38,15 @@ const images = await prisma.userImage.findMany({
 		</CldUploadWidget>
 	</section>
 
-	<section class='card py-6'>
-		<h2 class='pb-4 text-3xl'>Ваши публикаии</h2>
+	<section class=' py-6'>
+		<h2 class='pb-6 text-3xl'>Ваши публикаии</h2>
 
 		{!images.length && <p>Фотографии не найдены</p>}
 		{
 			images.length && currentUser && (
-				<div class='grid grid-cols-1 lg:grid-cols-3 gap-4'>
+				<div class='grid grid-cols-1 lg:grid-cols-4 gap-4'>
 					{images.map((img) => (
-						<Post imgData={img} currentUser={currentUser} />
+						<Post imgData={img} currentUser={currentUser} server:defer />
 					))}
 				</div>
 			)

@@ -1,22 +1,22 @@
 ---
-import { Image } from "astro:assets";
-import type { UserImageAllRelations } from "@_types/user";
-import { CldImage } from "astro-cloudinary";
-import { getCldImageUrl, getCldVideoUrl } from "astro-cloudinary/helpers";
-import type { User } from "better-auth";
-import HeartLike from "./HeartLike.vue";
+import { Image } from "astro:assets"
+import type { UserImageAllRelations } from "@_types/user"
+import { CldImage } from "astro-cloudinary"
+import { getCldImageUrl, getCldVideoUrl } from "astro-cloudinary/helpers"
+import type { User } from "better-auth"
+import HeartLike from "./HeartLike.vue"
 
 interface Props {
-	imgData: UserImageAllRelations;
-	currentUser: User;
+	imgData: UserImageAllRelations
+	currentUser: User
 }
 
-const { imgData, currentUser } = Astro.props;
+const { imgData, currentUser } = Astro.props
 
 const cldVideoPreview = getCldVideoUrl({
 	src: imgData.url,
 	rawTransformations: "e_preview",
-});
+})
 ---
 
 <div class='card bg-base-300 shadow p-8'>
@@ -40,7 +40,7 @@ const cldVideoPreview = getCldVideoUrl({
 
 		{
 			imgData.format === 'mp4' && (
-				<video class='video-preview h-[38rem] w-full rounded-md' src={cldVideoPreview} muted  />
+				<video class='video-preview h-[20rem] w-full rounded-md' src={cldVideoPreview} muted  />
 			)
 		}
 		{

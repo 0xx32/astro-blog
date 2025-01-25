@@ -7,15 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": [
-			"dist/*",
-			"node_modules/*",
-			"public/*",
-			".astro/*",
-			".vscode/*",
-			".git/*",
-			"prisma/*"
-		]
+		"ignore": ["dist", "node_modules/*", "public/*", ".astro/*", ".vscode/*", ".git/*", "prisma/*"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -36,7 +28,15 @@
 	},
 	"javascript": {
 		"formatter": {
-			"quoteStyle": "double"
+			"jsxQuoteStyle": "double",
+			"quoteProperties": "preserve",
+			"trailingCommas": "es5",
+			"semicolons": "asNeeded",
+			"arrowParentheses": "always",
+			"bracketSpacing": true,
+			"bracketSameLine": false,
+			"quoteStyle": "double",
+			"attributePosition": "auto"
 		}
 	}
 }

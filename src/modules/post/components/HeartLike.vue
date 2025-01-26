@@ -1,51 +1,51 @@
 <script setup lang="ts">
-import { actions } from "astro:actions";
-import type { UserImageAllRelations } from "@_types/user";
-import { createId } from "@paralleldrive/cuid2";
-import type { User } from "better-auth";
-import { Heart } from "lucide-vue-next";
-import { ref } from "vue";
+import { actions } from "astro:actions"
+import type { UserImageAllRelations } from "@_types/user"
+import { createId } from "@paralleldrive/cuid2"
+import type { User } from "better-auth"
+import { Heart } from "lucide-vue-next"
+import { ref } from "vue"
 
 interface Props {
-	currentUser: User | null;
-	imgData: UserImageAllRelations;
+	currentUser: User | null
+	imgData: UserImageAllRelations
 }
-const { imgData, currentUser } = defineProps<Props>();
+const { imgData, currentUser } = defineProps<Props>()
 
-const likes = ref(imgData.likes);
+const likes = ref(imgData.likes)
 
 const handleLike = async () => {
-	if (!currentUser) return;
+	if (!currentUser) return
 
-	const alreadyLiked = likes.value.some((like) => like.userId === currentUser.id);
+	const alreadyLiked = likes.value.some((like) => like.userId === currentUser.id)
 
 	if (alreadyLiked) {
-		likes.value = likes.value.filter((like) => like.userId !== currentUser.id);
+		likes.value = likes.value.filter((like) => like.userId !== currentUser.id)
 	} else {
 		likes.value = [
 			...likes.value,
 			{ userId: currentUser.id, imageId: imgData.id, createdAt: new Date(), id: createId() },
-		];
+		]
 	}
 
 	try {
 		const { data, error } = await actions.likeImage({
 			imageId: imgData.id,
-		});
+		})
 
-		if (error) likes.value = imgData.likes;
+		if (error) likes.value = imgData.likes
 
 		if (data?.success && alreadyLiked) {
-			likes.value = likes.value.filter((like) => like.userId !== currentUser.id);
+			likes.value = likes.value.filter((like) => like.userId !== currentUser.id)
 		}
 		if (data?.success && !alreadyLiked && data?.like) {
-			const indexOptimisticLike = likes.value.findIndex((like) => like.userId === currentUser.id);
-			likes.value = likes.value.splice(indexOptimisticLike, 1, data.like);
+			const indexOptimisticLike = likes.value.findIndex((like) => like.userId === currentUser.id)
+			likes.value = likes.value.splice(indexOptimisticLike, 1, data.like)
 		}
 	} catch (error) {
-		likes.value = imgData.likes;
+		likes.value = imgData.likes
 	}
-};
+}
 </script>
 
 <template>

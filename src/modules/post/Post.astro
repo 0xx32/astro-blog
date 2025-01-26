@@ -1,10 +1,11 @@
 ---
 import { Image } from "astro:assets"
-import type { UserImageAllRelations } from "@_types/user"
+import type { UserImageAllRelations } from "@_types/prisma"
 import { CldImage } from "astro-cloudinary"
 import { getCldImageUrl, getCldVideoUrl } from "astro-cloudinary/helpers"
 import type { User } from "better-auth"
-import HeartLike from "./HeartLike.vue"
+
+import HeartLike from "./components/HeartLike.vue"
 
 interface Props {
 	imgData: UserImageAllRelations

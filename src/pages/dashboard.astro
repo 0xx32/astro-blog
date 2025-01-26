@@ -4,15 +4,19 @@ export const prerender = false
 import { CldUploadWidget } from "astro-cloudinary"
 import { CloudUpload } from "lucide-vue-next"
 
-import Post from "@components/Post.astro"
 import Layout from "@layouts/Layout.astro"
+import Post from "@modules/post/Post.astro"
 import { prisma } from "@utils/db"
 
 const currentUser = Astro.locals.user
+const page = Astro.url.searchParams.get("page")
+const count = Astro.url.searchParams.get("count")
 
 const images = await prisma.userImage.findMany({
 	where: { userId: currentUser?.id },
 	include: { likes: true, user: true, comments: true },
+	skip: page && page !== "0" ? (Number(page) - 1) * Number(count) : 0,
+	take: Number(count) ?? 2,
 })
 ---
 
@@ -38,16 +42,22 @@ const images = await prisma.userImage.findMany({
 		</CldUploadWidget>
 	</section>
 
-	<section class=' py-6'>
+	<section class='py-6'>
 		<h2 class='pb-6 text-3xl'>Ваши публикаии</h2>
 
 		{!images.length && <p>Фотографии не найдены</p>}
 		{
 			images.length && currentUser && (
-				<div class='grid grid-cols-1 lg:grid-cols-4 gap-4'>
-					{images.map((img) => (
-						<Post imgData={img} currentUser={currentUser} server:defer />
-					))}
+				<div>
+					<div class='grid grid-cols-1 lg:grid-cols-4 gap-4'>
+						{images.map((img) => (
+							<Post imgData={img} currentUser={currentUser} server:defer />
+						))}
+					</div>
+
+					<div class='flex justify-center mt-4'>
+						<button class='btn'>Показать еще</button>
+					</div>
 				</div>
 			)
 		}

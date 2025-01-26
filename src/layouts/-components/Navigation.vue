@@ -1,18 +1,27 @@
 <script setup lang="ts">
-import { authClient } from "@utils/auth"
-import GithubSignIn from "./GithubSignIn.vue"
-import SignOut from "./SignOut.vue"
+import { authClient, signIn, signOut } from "@utils/auth"
 
 const session = authClient.useSession()
+
+const signOutHandler = async () => {
+	const response = await signOut()
+
+	if (response?.success) window.location.href = "/"
+}
 </script>
 
 <template>
 	<nav class='py-6'>
 		<ul class='flex justify-between items-center'>
 			<li>
-				<a href="/" class='flex gap-2 items-center font-bold font-kalam text-2xl text-base-content hover:underline'>Astro Blog</a>
+				<a href="/"
+					class='flex gap-2 items-center font-bold font-kalam text-2xl text-base-content hover:underline'>Astro Blog</a>
 			</li>
-			<GithubSignIn v-if='!session.data'>Войти</GithubSignIn>
+			<button v-if='!session.data' class='btn btn-primary' @click='signIn'>
+				Войти
+			</button>
+
+
 			<div v-else class='flex items-center gap-6'>
 				<div>
 					<a href="/dashboard">
@@ -21,13 +30,11 @@ const session = authClient.useSession()
 					</a>
 				</div>
 				<div>
-					<SignOut>
+					<button class='btn' @click='signOutHandler'>
 						Выход
-					</SignOut>
+					</button>
 				</div>
 			</div>
 		</ul>
 	</nav>
 </template>
-
-<style lang="scss" scoped></style>

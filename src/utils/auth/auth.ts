@@ -1,7 +1,7 @@
-import { betterAuth } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
+import { betterAuth } from "better-auth"
+import { prismaAdapter } from "better-auth/adapters/prisma"
 
-import { prisma } from "../db";
+import { prisma } from "../db"
 
 export const auth = betterAuth({
 	database: prismaAdapter(prisma, {
@@ -13,4 +13,4 @@ export const auth = betterAuth({
 			clientSecret: import.meta.env.GITHUB_CLIENT_SECRET,
 		},
 	},
-});
+})

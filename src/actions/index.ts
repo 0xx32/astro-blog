@@ -1,7 +1,7 @@
-import { defineAction } from "astro:actions";
-import { z } from "astro:schema";
-import { createId } from "@paralleldrive/cuid2";
-import { prisma } from "@utils/db";
+import { defineAction } from "astro:actions"
+import { z } from "astro:schema"
+import { createId } from "@paralleldrive/cuid2"
+import { prisma } from "@utils/db"
 
 export const server = {
 	addImage: defineAction({
@@ -10,10 +10,10 @@ export const server = {
 			format: z.string(),
 		}),
 		async handler({ publicId, format }, context) {
-			const currentUser = context.locals.user;
+			const currentUser = context.locals.user
 
 			if (!currentUser) {
-				throw new Error("User not found");
+				throw new Error("User not found")
 			}
 
 			try {
@@ -24,11 +24,11 @@ export const server = {
 						url: publicId,
 						format,
 					},
-				});
+				})
 
-				return { success: true, image: newImage.url };
+				return { success: true, image: newImage.url }
 			} catch (error) {
-				return { success: false, message: "Failed to save image" };
+				return { success: false, message: "Failed to save image" }
 			}
 		},
 	}),
@@ -38,8 +38,8 @@ export const server = {
 			imageId: z.string(),
 		}),
 		async handler({ imageId }, context) {
-			const currentUserId = context?.locals.user?.id;
-			if (!currentUserId) throw new Error("User not found");
+			const currentUserId = context?.locals.user?.id
+			if (!currentUserId) throw new Error("User not found")
 
 			try {
 				const existingLike = await prisma.imageLike.findFirst({
@@ -47,7 +47,7 @@ export const server = {
 						imageId,
 						userId: currentUserId,
 					},
-				});
+				})
 
 				if (existingLike) {
 					const deleteLike = await prisma.imageLike.delete({
@@ -55,7 +55,7 @@ export const server = {
 							id: existingLike.id,
 							imageId,
 						},
-					});
+					})
 				} else {
 					const newLike = await prisma.imageLike.create({
 						data: {
@@ -63,13 +63,13 @@ export const server = {
 							imageId,
 							userId: currentUserId,
 						},
-					});
+					})
 
-					return { success: true, like: newLike };
+					return { success: true, like: newLike }
 				}
 			} catch (error) {
-				return { success: false, message: "Failed to like image" };
+				return { success: false, message: "Failed to like image" }
 			}
 		},
 	}),
-};
+}

@@ -1,0 +1,29 @@
+---
+import Layout from "@layouts/Layout.astro"
+import Post from "@modules/post/Post.astro"
+import { prisma } from "@utils/db"
+
+export const prerender = false
+
+const postId = Astro.params.id
+const currentUser = Astro.locals.user
+
+const post = await prisma.userImage.findUnique({
+	where: {
+		id: postId,
+	},
+	include: { likes: true, user: true, comments: true },
+})
+---
+
+<Layout title={post?.description ?? 'Пост'}>
+	<div class='flex justify-center mt-10'>
+		{
+			post && currentUser && (
+				<div class='max-w-[500px]'>
+					<Post imgData={post} currentUser={currentUser} />
+				</div>
+			)
+		}
+	</div>
+</Layout>

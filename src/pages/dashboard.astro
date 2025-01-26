@@ -9,18 +9,19 @@ import Post from "@modules/post/Post.astro"
 import { prisma } from "@utils/db"
 
 const currentUser = Astro.locals.user
-const page = Astro.url.searchParams.get("page")
-const count = Astro.url.searchParams.get("count")
+// const page = Astro.url.searchParams.get("page")
+// const count = Astro.url.searchParams.get("count")
 
 const images = await prisma.userImage.findMany({
 	where: { userId: currentUser?.id },
 	include: { likes: true, user: true, comments: true },
-	skip: page && page !== "0" ? (Number(page) - 1) * Number(count) : 0,
-	take: Number(count) ?? 2,
+	orderBy: { createdAt: "desc" },
+	// skip: page && page !== "0" ? (Number(page) - 1) * Number(count) : 0,
+	// take: Number(count) ?? 2,
 })
 ---
 
-<Layout>
+<Layout title='Dashboard'>
 	<section class='flex flex-col items-center gap-4'>
 		<img src={currentUser?.image} alt='' width='100' class='rounded-full' />
 		<h1 class='text-4xl text-base-content brightness-150 font-bold'>

@@ -1,5 +1,5 @@
 ---
-import Navigation from "./-components/Navigation.vue"
+import Header from './-components/Header.vue'
 
 interface Props {
 	title: string
@@ -19,12 +19,12 @@ const { title, isNavigation = true } = Astro.props
 		<title>{title}</title>
 	</head>
 	<body>
-	<div class='container mx-auto'>
-		{isNavigation && <Navigation  client:only='vue' />}
-		<main>
-			<slot />
-		</main>
-	</div>
+		<div class="container mx-auto">
+			{isNavigation && <Header client:only="vue" />}
+			<main>
+				<slot />
+			</main>
+		</div>
 	</body>
 </html>
 

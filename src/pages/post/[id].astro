@@ -1,7 +1,7 @@
 ---
-import Layout from "@layouts/Layout.astro"
-import Post from "@modules/post/Post.astro"
-import { prisma } from "@utils/db"
+import Layout from '@/layouts/Layout.astro'
+import Post from '@/modules/post/Post.astro'
+import { prisma } from '@/utils/db'
 
 export const prerender = false
 
@@ -17,10 +17,10 @@ const post = await prisma.userImage.findUnique({
 ---
 
 <Layout title={post?.description ?? 'Пост'}>
-	<div class='flex justify-center mt-10'>
+	<div class="flex justify-center mt-10">
 		{
 			post && currentUser && (
-				<div class='max-w-[500px]'>
+				<div class="max-w-[500px]">
 					<Post imgData={post} currentUser={currentUser} />
 				</div>
 			)

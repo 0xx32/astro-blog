@@ -1,21 +1,19 @@
 ---
-export const prerender = false
-import Layout from "@layouts/Layout.astro"
-import SingInForm from "@modules/auth/components/SignIn/SignInForm.vue"
-import SingUpForm from "@modules/auth/components/SignUp/SignUpForm.vue"
+import Layout from '@/layouts/Layout.astro'
+import SingInForm from '@/modules/auth/components/SignIn/SignInForm.vue'
+import SingUpForm from '@/modules/auth/components/SignUp/SignUpForm.vue'
 
-const authType = (Astro.url.searchParams.get("type") as "sign-in" | "sign-up") ?? "sign-in"
-if (authType !== "sign-in" && authType !== "sign-up") {
-	return Astro.redirect("/")
+export const prerender = false
+
+const authType = (Astro.url.searchParams.get('type') as 'sign-in' | 'sign-up') ?? 'sign-in'
+if (authType !== 'sign-in' && authType !== 'sign-up') {
+	return Astro.redirect('/')
 }
 ---
 
-<Layout title='Авторизация' isNavigation={false}>
-	<div class='h-screen flex items-center justify-center flex-col '>
-	
-		{authType === "sign-in" && 	<SingInForm client:load  />}
-		{authType === "sign-up" && 	<SingUpForm client:load  />}
-
+<Layout title="Авторизация" isNavigation={false}>
+	<div class="h-screen flex items-center justify-center flex-col">
+		{authType === 'sign-in' && <SingInForm client:load />}
+		{authType === 'sign-up' && <SingUpForm client:load />}
 	</div>
 </Layout>
-

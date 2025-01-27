@@ -1,41 +1,31 @@
 ---
+import { CldUploadWidget } from 'astro-cloudinary'
+import { CloudUpload } from 'lucide-vue-next'
+
+import Layout from '@/layouts/Layout.astro'
+import Post from '@/modules/post/Post.astro'
+import { prisma } from '@/utils/db'
+
 export const prerender = false
 
-import { CldUploadWidget } from "astro-cloudinary"
-import { CloudUpload } from "lucide-vue-next"
-
-import Layout from "@layouts/Layout.astro"
-import Post from "@modules/post/Post.astro"
-import { prisma } from "@utils/db"
-
 const currentUser = Astro.locals.user
-// const page = Astro.url.searchParams.get("page")
-// const count = Astro.url.searchParams.get("count")
 
 const images = await prisma.userImage.findMany({
 	where: { userId: currentUser?.id },
 	include: { likes: true, user: true, comments: true },
-	orderBy: { createdAt: "desc" },
-	// skip: page && page !== "0" ? (Number(page) - 1) * Number(count) : 0,
-	// take: Number(count) ?? 2,
+	orderBy: { createdAt: 'desc' },
 })
 ---
 
-<Layout title='Dashboard'>
-	<section class='flex flex-col items-center gap-4'>
-		<img src={currentUser?.image} alt='' width='100' class='rounded-full' />
-		<h1 class='text-4xl text-base-content brightness-150 font-bold'>
-			Dashboard
-		</h1>
-		<p class='text-xl'>Вы можете загрузить фотографии или видео</p>
+<Layout title="Dashboard">
+	<section class="flex flex-col items-center gap-4">
+		<img src={currentUser?.image} alt="" width="100" class="rounded-full" />
+		<h1 class="text-4xl text-base-content brightness-150 font-bold">Dashboard</h1>
+		<p class="text-xl">Вы можете загрузить фотографии или видео</p>
 
-		<CldUploadWidget
-			uploadPreset='astro-blog'
-			id='upload-events'
-			signatureEndpoint={'/api/signed'}
-		>
-			<button class='btn btn-accent'>
-				<div class='flex items-center gap-2'>
+		<CldUploadWidget uploadPreset="astro-blog" id="upload-events" signatureEndpoint="/api/signed">
+			<button class="btn btn-accent">
+				<div class="flex items-center gap-2">
 					<span>Загрузить</span>
 					<CloudUpload />
 				</div>
@@ -43,21 +33,21 @@ const images = await prisma.userImage.findMany({
 		</CldUploadWidget>
 	</section>
 
-	<section class='py-6'>
-		<h2 class='pb-6 text-3xl'>Ваши публикаии</h2>
+	<section class="py-6">
+		<h2 class="pb-6 text-3xl">Ваши публикаии</h2>
 
 		{!images.length && <p>Фотографии не найдены</p>}
 		{
 			images.length && currentUser && (
 				<div>
-					<div class='grid grid-cols-1 lg:grid-cols-4 gap-4'>
-						{images.map((img) => (
+					<div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+						{images.map(img => (
 							<Post imgData={img} currentUser={currentUser} server:defer />
 						))}
 					</div>
 
-					<div class='flex justify-center mt-4'>
-						<button class='btn'>Показать еще</button>
+					<div class="flex justify-center mt-4">
+						<button class="btn">Показать еще</button>
 					</div>
 				</div>
 			)
@@ -69,34 +59,28 @@ const images = await prisma.userImage.findMany({
 	import { actions } from 'astro:actions'
 
 	interface CloudUploadEvent {
-		event: Event
-		info: {
-			public_id: string
-			format: string
-		}
+	  event: Event
+	  info: {
+	    public_id: string
+	    format: string
+	  }
 	}
 
 	const widget = document.querySelector('#upload-events')
 	if (widget) {
-		// @ts-ignore
-		widget.addEventListener(
-			'clduploadwidget:success',
-			async (e: CustomEvent<CloudUploadEvent>) => {
-				const imageUrl = e.detail.info.public_id
-				const format = e.detail.info.format
+	  // @ts-ignore
+	  widget.addEventListener('clduploadwidget:success', async (e: CustomEvent<CloudUploadEvent>) => {
+	    const imageUrl = e.detail.info.public_id
+	    const format = e.detail.info.format
 
-				const { data, error } = await actions.addImage({
-					format,
-					publicId: imageUrl,
-				})
+	    const { data } = await actions.addImage({
+	      format,
+	      publicId: imageUrl,
+	    })
 
-				if (error) console.info(error)
-
-				if (data) {
-					console.log(data)
-					window.location.reload()
-				}
-			}
-		) as unknown as EventListener
+	    if (data) {
+	      window.location.reload()
+	    }
+	  }) as unknown as EventListener
 	}
 </script>

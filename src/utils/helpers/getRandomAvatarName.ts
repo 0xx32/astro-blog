@@ -1,4 +1,5 @@
-import { DICEBEAR_AVATARS } from "@utils/constants/dicebear-avatars"
+import { DICEBEAR_AVATARS } from '@/utils/constants/dicebear-avatars'
 
-export const getRandomAvatarName = (gender: "male" | "female") =>
-	DICEBEAR_AVATARS[gender][Math.floor(Math.random() * DICEBEAR_AVATARS[gender].length)]
+export function getRandomAvatarName(gender: 'male' | 'female') {
+  return DICEBEAR_AVATARS[gender][Math.floor(Math.random() * DICEBEAR_AVATARS[gender].length)]
+}

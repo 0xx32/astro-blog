@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { actions } from "astro:actions"
-import type { UserImageAllRelations } from "@_types/user"
+import type { UserImageAllRelations } from "@_types/prisma"
 import { createId } from "@paralleldrive/cuid2"
 import type { User } from "better-auth"
 import { Heart } from "lucide-vue-next"
